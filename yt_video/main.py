@@ -1,35 +1,21 @@
-import urllib.request
-import json
-from yt_video.settings import API_KEY  # 用絕對路徑import環境變數
-CHANNEL_id = 'UCd4JzeAkgTsyJDEkWC11PoA'
+from yt_video.pipeline.steps.get_video_list import GetVideoList
+from yt_video.pipeline.steps.step import StepException
+from yt_video.pipeline.pipeline import Pipeline
 
-print(API_KEY)
-
-def get_all_video_in_channel(channel_id):
-    base_video_url = 'https://www.youtube.com/watch?v='
-    base_search_url = 'https://www.googleapis.com/youtube/v3/search?'
-
-    first_url = base_search_url + f'key={api_key}&channelId={channel_id}&part=snippet,id&order=date&maxResults=25'
-
-    video_links = []
-    url = first_url
-    while True:
-        inp = urllib.request.urlopen(url)
-        resp = json.load(inp)
-        # print(resp)
-        for i in resp['items']:
-            if i['id']['kind'] == "youtube#video":
-                video_links.append(base_video_url + i['id']['videoId'])
-
-        try:
-            next_page_token = resp['nextPageToken']
-            url = first_url + f'&pageToken={next_page_token}'
-        except KeyError:
-            break
-    return video_links
+CHANNEL_ID = 'UCd4JzeAkgTsyJDEkWC11PoA'
 
 
-# video_list = get_all_video_in_channel(CHANNEL_id)
+def main():
+    inputs = {
+        'channel_id': CHANNEL_ID
+    }
 
-# print(video_list)
-# print(len(video_list))
+    steps = [
+        GetVideoList(),  # 將要處理的步驟功能儲存成清單，再利用for loop呼叫
+    ]
+    p = Pipeline(steps)
+    p.operate(inputs)
+
+
+if __name__ == '__main__':
+    main()
