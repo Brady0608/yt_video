@@ -5,6 +5,7 @@ from yt_video.pipeline.pipeline import Pipeline
 from yt_video.utils import UTILS
 from yt_video.pipeline.steps.preflight import Preflight
 from yt_video.pipeline.steps.postflight import Postflight
+from yt_video.pipeline.steps.read_caption import ReadCaption
 
 
 CHANNEL_ID = 'UCKSVUHI9rbbkXhvAXK-2uxA'
@@ -19,6 +20,7 @@ def main():
         Preflight(),
         GetVideoList(),  # 將要處理的步驟功能儲存成清單，再利用for loop呼叫
         DownloadCaptions(),
+        ReadCaption(),
         Postflight(),
     ]
     utils = UTILS()
