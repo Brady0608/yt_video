@@ -1,14 +1,14 @@
-import os
-from pprint import pprint
 from yt_video.pipeline.steps.step import Step
-from yt_video.settings import CAPTIONS_DIR
+
 
 class ReadCaption(Step):
     def process(self, data, inputs, utils):
-        data = {}  # data為字典 key為檔名.txt value為字幕
-        for caption_file in os.listdir(CAPTIONS_DIR):
+        for yt in data:
+            if not utils.caption_file_exists(yt):
+                continue
+
             captions = {}
-            with open(os.path.join(CAPTIONS_DIR, caption_file), 'r') as f:
+            with open(yt.get_caption_filepath, 'r') as f:
                 time_line = False  # 用來判斷該行是否為時間
                 time = None
                 caption = None
@@ -22,8 +22,8 @@ class ReadCaption(Step):
                         caption = line
                         captions[caption] = time  # 將字幕寫入字典
                         time_line = False
-            data[caption_file] = captions
-        pprint(data)
+            yt.captions = captions
+
         return data
 
 
